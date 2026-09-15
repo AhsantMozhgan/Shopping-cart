@@ -1,7 +1,6 @@
-/* Remove a single product
-   each cart row's "Delete" link removes just that
-   one item, via a data-id attribute and a delegated click listener
-   on .cart-content. */
+/* Increase product amount
+   clicking the up-chevron on a cart row increments
+   that item's amount, both in the `cart` array and on screen. */
 
 const productsDOM = document.querySelector('.products-center')
 const cartItems = document.querySelector('.cart-items')
@@ -88,10 +87,6 @@ class View {
     addCartItem(item) {
         const div = document.createElement('div')
         div.classList.add('cart-item')
-        // Tag the row itself with the product id. This lets the click
-        // handler below find "the row for this id" directly, instead
-        // of assuming a fixed number of parentElement hops (see the
-        // cartProcess() note further down).
         div.dataset.id = item.id
 
         div.innerHTML = `
@@ -148,6 +143,24 @@ class View {
 
                 cartContent.removeChild(removeItem.closest('.cart-item'))
                 this.removeProduct(id)
+            }
+
+            if (event.target.classList.contains('fa-chevron-up')) {
+                let addAmount = event.target
+                let id = addAmount.dataset.id
+
+                let product = cart.find((item) => {
+                    return item.id === id
+                })
+
+                product.amount = product.amount + 1
+
+                Storage.saveCart(cart)
+                this.setCartValues(cart)
+
+                // The <p class="item-amount"> sits right after the
+                // up-chevron in the markup, hence nextElementSibling.
+                addAmount.nextElementSibling.innerText = product.amount
             }
         })
     }
