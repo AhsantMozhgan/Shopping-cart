@@ -1,6 +1,6 @@
-/* Increase product amount
-   clicking the up-chevron on a cart row increments
-   that item's amount, both in the `cart` array and on screen. */
+/* Decrease product amount
+   clicking the down-chevron decrements a cart
+   item's amount, and removes the row entirely once it hits zero. */
 
 const productsDOM = document.querySelector('.products-center')
 const cartItems = document.querySelector('.cart-items')
@@ -158,9 +158,25 @@ class View {
                 Storage.saveCart(cart)
                 this.setCartValues(cart)
 
-                // The <p class="item-amount"> sits right after the
-                // up-chevron in the markup, hence nextElementSibling.
                 addAmount.nextElementSibling.innerText = product.amount
+            }
+
+            if (event.target.classList.contains('fa-chevron-down')) {
+
+                let lowerAmount = event.target
+                let id = lowerAmount.dataset.id
+
+                let product = cart.find((item) => item.id === id)
+                product.amount = product.amount - 1
+
+                if (product.amount > 0) {
+                    Storage.saveCart(cart)
+                    this.setCartValues(cart)
+                    lowerAmount.previousElementSibling.innerText = product.amount
+                } else {
+                    cartContent.removeChild(lowerAmount.closest('.cart-item'))
+                    this.removeProduct(id)
+                }
             }
         })
     }
