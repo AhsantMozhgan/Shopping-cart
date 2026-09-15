@@ -1,11 +1,11 @@
-/* Set cart values
-   View.setCartValues() sums up the cart's total
-   price and total item count, and writes them into the navbar badge
-   and (eventually) the cart footer. */
+/* Display cart items
+   View.addCartItem() builds one cart row per item
+   and appends it into .cart-content whenever "Add to Cart" is clicked. */
 
 const productsDOM = document.querySelector('.products-center')
 const cartItems = document.querySelector('.cart-items')
 const cartTotal = document.querySelector('.cart-total')
+const cartContent = document.querySelector('.cart-content')
 
 let cart = []
 
@@ -61,6 +61,8 @@ class View {
                 Storage.saveCart(cart)
 
                 this.setCartValues(cart)
+
+                this.addCartItem(cartItem)
             })
         })
     }
@@ -70,14 +72,32 @@ class View {
         let totalItems = 0
 
         cart.map((item) => {
-            // Products now come out of products.json as real numbers
-            // (see products.json), so this math is no longer relying
-            // on implicit string coercion the way "$89" * 1 used to.
             totalPrice = totalPrice + item.price * item.amount
             totalItems = totalItems + item.amount
         })
         cartTotal.innerText = totalPrice
         cartItems.innerText = totalItems
+    }
+
+    addCartItem(item) {
+        const div = document.createElement('div')
+        div.classList.add('cart-item')
+
+        div.innerHTML = `
+            <img src="${item.image}" alt="${item.title}">
+            <div>
+                <h4>${item.title}</h4>
+                <h5>${item.price}</h5>
+                <span class="remove-item">Delete</span>
+            </div>
+            <div class="cart-item-amount">
+                <i class="fas fa-chevron-up"></i>
+                <p class="item-amount">${item.amount}</p>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        `
+
+        cartContent.appendChild(div)
     }
 }
 
