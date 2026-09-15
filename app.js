@@ -1,5 +1,7 @@
-/* Remove cart products (clear cart)
-   the "Delete Products" button empties the cart. */
+/* Remove a single product
+   each cart row's "Delete" link removes just that
+   one item, via a data-id attribute and a delegated click listener
+   on .cart-content. */
 
 const productsDOM = document.querySelector('.products-center')
 const cartItems = document.querySelector('.cart-items')
@@ -86,26 +88,23 @@ class View {
     addCartItem(item) {
         const div = document.createElement('div')
         div.classList.add('cart-item')
+        // Tag the row itself with the product id. This lets the click
+        // handler below find "the row for this id" directly, instead
+        // of assuming a fixed number of parentElement hops (see the
+        // cartProcess() note further down).
+        div.dataset.id = item.id
 
-        // FIX: the original had literal `// ` text sitting inside the
-        // template string right before/after the wrapper tags —
-        // someone tried to "comment out" a duplicate <div>/</div>
-        // pair, but `//` isn't a comment inside an HTML string, so it
-        // rendered as visible " // " text in every cart row, AND the
-        // nesting was still mismatched underneath it (same bug as
-        // steps 109-112). Both problems are fixed by writing clean,
-        // correctly nested markup with no leftover comment characters.
         div.innerHTML = `
             <img src="${item.image}" alt="${item.title}">
             <div>
                 <h4>${item.title}</h4>
                 <h5>${item.price}</h5>
-                <span class="remove-item">Delete</span>
+                <span class="remove-item" data-id="${item.id}">Delete</span>
             </div>
             <div class="cart-item-amount">
-                <i class="fas fa-chevron-up"></i>
+                <i class="fas fa-chevron-up" data-id="${item.id}"></i>
                 <p class="item-amount">${item.amount}</p>
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-down" data-id="${item.id}"></i>
             </div>
         `
 
@@ -141,24 +140,19 @@ class View {
         clearCartBtn.addEventListener('click', () => {
             this.clearCart()
         })
+
+        cartContent.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-item')) {
+                let removeItem = event.target
+                let id = removeItem.dataset.id
+
+                cartContent.removeChild(removeItem.closest('.cart-item'))
+                this.removeProduct(id)
+            }
+        })
     }
 
     clearCart() {
-        // THE CRASH BUG in this step:
-        //   let cartItem = cart.map((item) => { return item.id })
-        //   cartItems.forEach((item) => { return this.removeProduct(item) })
-        // Two things wrong: (1) the array of ids was named `cartItem`
-        // (singular) but the loop below it iterated over `cartItems`
-        // (plural) — the constant declared at the very top of this
-        // file that points at the small navbar badge <div>. (2) that
-        // badge is a single DOM element, not an array, so it has no
-        // .forEach method at all — calling it would throw
-        // "cartItems.forEach is not a function" and clearCart() would
-        // crash immediately, before ever reaching the code that empties
-        // the visible cart panel.
-        //
-        // FIX: rename the local array so it can't collide with the
-        // cached `cartItems` DOM node, and loop over that instead.
         let productIds = cart.map((item) => item.id)
 
         productIds.forEach((id) => {
