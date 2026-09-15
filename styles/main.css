@@ -1,0 +1,341 @@
+:root {
+    --ink:           #23282c;   /* body text — deep, faintly blue, never pure black */
+    --muted:         #646d74;   /* secondary text */
+    --accent:        #4f7267;   /* buttons, icons, anything interactive */
+    --accent-deep:   #3c5a50;   /* navbar and hover states */
+    --accent-soft:   #dce4e0;   /* tints on dark ground */
+    --bg:            #fcfcfb;   /* page */
+    --panel:         #f2f3f1;   /* cart surface */
+    --line:          #e3e5e2;   /* hairlines and image placeholders */
+    --on-dark:       #f4f6f4;   /* text on the accent */
+ 
+    --radius:        3px;
+    --speed:         0.28s;
+}
+ 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+ 
+body {
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    line-height: 1.55;
+}
+ 
+/* Visible keyboard focus everywhere, in one rule. */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+ 
+/* ---------- Navbar ---------- */
+ 
+.navbar {
+    position: sticky;
+    top: 0;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: var(--accent-deep);
+    z-index: 1;
+}
+ 
+.navbar-center {
+    width: 100%;
+    max-width: 1170px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 1.5rem;
+}
+ 
+.nav-icon {
+    font-size: 1.4rem;
+    color: var(--accent-soft);
+}
+ 
+.cart-btn {
+    position: relative;
+    cursor: pointer;
+}
+ 
+.cart-items {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    min-width: 19px;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    padding: 0 5px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 19px;
+    text-align: center;
+}
+ 
+/* ---------- Buttons ---------- */
+ 
+.btn {
+    padding: 0.9rem 2.5rem;
+    font-size: 0.95rem;
+    background: var(--accent);
+    color: var(--on-dark);
+    border: none;
+    border-radius: var(--radius);
+    font: inherit;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    outline: none;
+    transition: background var(--speed) ease;
+}
+ 
+.btn:hover {
+    background: var(--accent-deep);
+}
+ 
+/* ---------- Products grid ---------- */
+ 
+.products {
+    padding: 4rem 0;
+}
+ 
+.section-title h2 {
+    text-align: center;
+    font-size: 2.1rem;
+    font-weight: 500;
+    margin-bottom: 3rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+}
+ 
+.products-center {
+    width: 90vw;
+    margin: 0 auto;
+    max-width: 1170px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-column-gap: 1.5rem;
+    grid-row-gap: 2.5rem;
+}
+ 
+.img-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+}
+ 
+/* The Add button rests off-canvas and slides in on hover.
+   Motion here answers a deliberate action, so it earns its place. */
+.bag-btn {
+    position: absolute;
+    top: 70%;
+    right: 0;
+    background: var(--accent);
+    border: none;
+    padding: 0.55rem 0.9rem;
+    color: var(--on-dark);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    transform: translateX(101%);
+    transition: transform var(--speed) ease, background var(--speed) ease;
+}
+ 
+.bag-btn:hover,
+.bag-btn:focus-visible,
+.img-container:hover .bag-btn {
+    transform: translateX(0);
+}
+ 
+.bag-btn:hover {
+    background: var(--accent-deep);
+}
+ 
+.fa-shopping-cart {
+    margin-right: 0.5rem;
+}
+ 
+.product-img {
+    display: block;
+    width: 100%;
+    min-height: 12rem;
+    background: var(--line);
+}
+ 
+.product h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 1rem;
+    color: var(--ink);
+    text-align: center;
+}
+ 
+.product h4 {
+    margin-top: 0.4rem;
+    text-align: center;
+    color: var(--muted);
+    font-weight: 400;
+}
+ 
+/* ---------- Cart panel ----------
+   Two classes drive the whole open/close animation:
+   .transparentBcg on the overlay and .showCart on the panel.
+   The JavaScript only adds and removes those; the motion lives here.
+   ---------------------------------- */
+ 
+.cart-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    transition: all var(--speed) linear;
+    background: rgba(35, 40, 44, 0.32);
+    z-index: 2;
+    visibility: hidden;
+}
+ 
+.transparentBcg {
+    visibility: visible;
+}
+ 
+.cart {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    z-index: 3;
+    background: var(--panel);
+    padding: 1.5rem;
+    transition: transform var(--speed) ease;
+    transform: translateX(100%);
+}
+ 
+@media screen and (min-width: 768px) {
+    .cart {
+        width: 30vw;
+        min-width: 450px;
+    }
+}
+ 
+.showCart {
+    transform: translateX(0);
+}
+ 
+.close-cart {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--muted);
+    transition: color var(--speed) ease;
+}
+ 
+.close-cart:hover {
+    color: var(--ink);
+}
+ 
+.cart h2 {
+    text-align: center;
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+    color: var(--ink);
+}
+ 
+/* ---------- Cart rows ---------- */
+ 
+.cart-item {
+    display: grid;
+    align-items: center;
+    grid-template-columns: auto 1fr auto;
+    grid-column-gap: 1.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--line);
+}
+ 
+.cart-item img {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background: var(--line);
+}
+ 
+.cart-item h4 {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+ 
+.cart-item h5 {
+    margin: 0.3rem 0 0.5rem;
+    font-weight: 400;
+    color: var(--muted);
+}
+ 
+.item-amount {
+    text-align: center;
+    font-size: 0.95rem;
+    margin: 0.15rem 0;
+}
+ 
+.remove-item {
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: color var(--speed) ease;
+}
+ 
+.remove-item:hover {
+    color: var(--accent-deep);
+}
+ 
+.fa-chevron-up,
+.fa-chevron-down {
+    color: var(--accent);
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: 0.8rem;
+    transition: color var(--speed) ease;
+}
+ 
+.fa-chevron-up:hover,
+.fa-chevron-down:hover {
+    color: var(--accent-deep);
+}
+ 
+/* ---------- Cart footer ---------- */
+ 
+.cart-footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+ 
+.cart-footer h3 {
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.25rem;
+}
+ 
+/* ---------- Motion preference ---------- */
+ 
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition-duration: 0.01ms !important;
+    }
+ 
+    .bag-btn {
+        transform: translateX(0);
+    }
+}
