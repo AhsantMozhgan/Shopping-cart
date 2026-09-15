@@ -1,7 +1,7 @@
-/* Add products to cart
-   clicking a bag button now actually pushes an
-   item onto `cart`, using Storage.getProduct(id) to look up the full
-   product record. */
+/* Save cart data
+   every cart item now also gets an `amount` field,
+   and Storage.saveCart() persists the whole cart array to
+   localStorage after every change. */
 
 const productsDOM = document.querySelector('.products-center')
 
@@ -30,7 +30,6 @@ class View {
     displayProducts(products) {
         let result = ''
         products.forEach((item) => {
-            // FIX: attributes quoted — see step 103.
             result += `
             <article class="product">
                 <div class="img-container">
@@ -55,9 +54,9 @@ class View {
             let id = item.dataset.id
 
             item.addEventListener('click', (event) => {
-                let cartItem = Storage.getProduct(id)
+                let cartItem = { ...Storage.getProduct(id), amount: 1 }
                 cart = [...cart, cartItem]
-                console.log(cart)
+                Storage.saveCart(cart)
             })
         })
     }
@@ -72,18 +71,22 @@ class Storage {
         let products = JSON.parse(localStorage.getItem('products'))
         return products.find((item) => item.id === id)
     }
+
+    static saveCart(cart) {
+        localStorage.setItem('cart', JSON.stringify(cart))
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const view = new View()
     const product = new Product()
 
-    product.getProducts().then((data) => {
-        view.displayProducts(data)
-        Storage.saveProducts(data)
-    }).then(() => {
-        // Must run AFTER displayProducts() has put the buttons in the
-        // DOM, otherwise querySelectorAll('.bag-btn') finds nothing.
-        view.getCartButtons()
-    })
+    product
+        .getProducts()
+        .then((data) => {
+            view.displayProducts(data)
+            Storage.saveProducts(data)
+        }).then(() => {
+            view.getCartButtons()
+        })
 })
