@@ -1,6 +1,5 @@
-/* Close cart button
-   the cart icon in the navbar opens the cart, and
-   the X icon inside the panel closes it (View.hideCart()). */
+/* Remove cart products (clear cart)
+   the "Delete Products" button empties the cart. */
 
 const productsDOM = document.querySelector('.products-center')
 const cartItems = document.querySelector('.cart-items')
@@ -10,6 +9,7 @@ const cartDOM = document.querySelector('.cart')
 const cartOverlay = document.querySelector('.cart-overlay')
 const cartBtn = document.querySelector('.cart-btn')
 const closeCartBtn = document.querySelector('.close-cart')
+const clearCartBtn = document.querySelector('.clear-cart')
 
 let cart = []
 
@@ -87,6 +87,14 @@ class View {
         const div = document.createElement('div')
         div.classList.add('cart-item')
 
+        // FIX: the original had literal `// ` text sitting inside the
+        // template string right before/after the wrapper tags —
+        // someone tried to "comment out" a duplicate <div>/</div>
+        // pair, but `//` isn't a comment inside an HTML string, so it
+        // rendered as visible " // " text in every cart row, AND the
+        // nesting was still mismatched underneath it (same bug as
+        // steps 109-112). Both problems are fixed by writing clean,
+        // correctly nested markup with no leftover comment characters.
         div.innerHTML = `
             <img src="${item.image}" alt="${item.title}">
             <div>
@@ -128,6 +136,46 @@ class View {
             return this.addCartItem(item)
         })
     }
+
+    cartProcess() {
+        clearCartBtn.addEventListener('click', () => {
+            this.clearCart()
+        })
+    }
+
+    clearCart() {
+        // THE CRASH BUG in this step:
+        //   let cartItem = cart.map((item) => { return item.id })
+        //   cartItems.forEach((item) => { return this.removeProduct(item) })
+        // Two things wrong: (1) the array of ids was named `cartItem`
+        // (singular) but the loop below it iterated over `cartItems`
+        // (plural) — the constant declared at the very top of this
+        // file that points at the small navbar badge <div>. (2) that
+        // badge is a single DOM element, not an array, so it has no
+        // .forEach method at all — calling it would throw
+        // "cartItems.forEach is not a function" and clearCart() would
+        // crash immediately, before ever reaching the code that empties
+        // the visible cart panel.
+        //
+        // FIX: rename the local array so it can't collide with the
+        // cached `cartItems` DOM node, and loop over that instead.
+        let productIds = cart.map((item) => item.id)
+
+        productIds.forEach((id) => {
+            this.removeProduct(id)
+        })
+
+        while (cartContent.children.length > 0) {
+            cartContent.removeChild(cartContent.children[0])
+        }
+    }
+
+    removeProduct(id) {
+        cart = cart.filter((item) => item.id !== id)
+
+        this.setCartValues(cart)
+        Storage.saveCart(cart)
+    }
 }
 
 class Storage {
@@ -164,5 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
             Storage.saveProducts(data)
         }).then(() => {
             view.getCartButtons()
+            view.cartProcess()
         })
 })
