@@ -60,9 +60,22 @@ body {
     color: var(--accent-soft);
 }
  
+/* Both icon controls are real <button> elements so they are keyboard reachable.
+   That brings native chrome with it — background, border, inherited font — which
+   these two rules strip back out. */
+.cart-btn,
+.close-cart {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+ 
 .cart-btn {
     position: relative;
-    cursor: pointer;
 }
  
 .cart-items {
@@ -183,6 +196,13 @@ body {
     text-align: center;
     color: var(--muted);
     font-weight: 400;
+}
+
+.product {
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px rgb(0, 14, 0);
 }
  
 /* ---------- Cart panel ----------

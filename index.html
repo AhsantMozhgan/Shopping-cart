@@ -5,45 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="../styles/main.css">
 </head>
 <body>
+    <!-- ==========================================================
+             Navbar
+             ========================================================== -->
     <nav class="navbar">
-        <!-- Cart icon + count badge are pinned to the right edge of
-             the navbar via .navbar-center { justify-content: flex-end }
-             in styles/main.css. -->
         <div class="navbar-center">
-            <div class="cart-btn">
+            <!-- A <button>, not a <div>: it performs an action, so it needs to be
+                            reachable by keyboard and announced as a control. The icon is
+                            decorative, so aria-hidden keeps a screen reader from reading it
+                            and the accessible name comes from aria-label instead. -->
+            <button class="cart-btn" type="button" aria-label="Open shopping cart">
                 <span class="nav-icon">
-                    <i class="fas fa-shopping-cart"></i>
+                    <i class="fas fa-shopping-cart" aria-hidden="true">
+                    </i>
                 </span>
-                <div class="cart-items">0</div>
-            </div>
+                <!-- setCartValues() writes the live item count here. aria-live
+                                     means the new number is announced when it changes, so the
+                                     feedback is not purely visual. -->
+                <span class="cart-items" aria-live="polite">0</span>
+            </button>
         </div>
     </nav>
-
+    <!-- ==========================================================
+            Products
+            ==========================================================
+            .products-center is deliberately empty. displayProducts() builds every
+            card as one HTML string and assigns it here in a single write, so the
+            markup for a product lives in app.js rather than being duplicated
+            between this file and the render function.
+            ========================================================== -->
     <section class="products">
         <div class="section-title">
             <h2>Products</h2>
         </div>
         <div class="products-center"></div>
     </section>
-
+    <!-- ==========================================================
+            Cart panel
+            ==========================================================
+            Present in the document from the start, hidden by CSS rather than by
+            being absent. showCart() and hideCart() only add and remove two classes
+            — .transparentBcg here and .showCart on .cart — which is why the slide
+            animation can live entirely in the stylesheet.
+            ========================================================== -->
     <div class="cart-overlay">
         <div class="cart">
-            <span class="close-cart">
-                <i class="fas fa-times"></i>
-            </span>
+            <button class="close-cart" type="button" aria-label="Close shopping cart">
+                <i class="fas fa-times" aria-hidden="true">
+                </i>
+            </button>
             <h2>Shopping Cart</h2>
-            <!-- Now dynamic: View.addCartItem() fills this in per item. -->
+            <!-- Rows are appended here by addCartItem(). It also carries the one
+                             delegated click listener that handles Delete and both chevrons
+                             for every row, including rows that do not exist yet. -->
             <div class="cart-content"></div>
             <div class="cart-footer">
-                <h3>Total Price: $<span class="cart-total">0</span></h3>
-                <button class="clear-cart btn">Delete Products</button>
+                <h3>Total Price: $
+                    <span class="cart-total">0</span>
+                </h3>
+                <button class="clear-cart btn" type="button">Delete Products</button>
             </div>
         </div>
     </div>
-
+    <!-- The script sits at the end of <body> so the whole document is parsed
+            before it runs. That is why app.js can cache its DOM references at the
+            top level and still find every element. -->
     <script src="app.js"></script>
 </body>
 </html>
