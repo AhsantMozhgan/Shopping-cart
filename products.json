@@ -1,68 +1,132 @@
 {
     "items": [
         {
-            "sys": {"id": "1"},
+            "sys": {
+                "id": "1"
+            },
             "fields": {
-                "title": "First Product",
-                "price": "$89",
-                "image": {"fields": {"file": {"url": "./images/product-1.jpg"}}}
+                "title": "Warm Vanilla & Iris Perfume",
+                "price": "89",
+                "image": {
+                    "fields": {
+                        "file": {
+                            "url": "../images/product-1.jpg"
+                        }
+                    }
+                }
             }
         },
         {
-            "sys": {"id": "2"},
+            "sys": {
+                "id": "2"
+            },
             "fields": {
-                "title": "Second Product",
-                "price": "$29",
-                "image": {"fields": {"file": {"url": "./images/product-2.jpg"}}}
+                "title": "Cherry Blossom High-Top Sneakers",
+                "price": "29",
+                "image": {
+                    "fields": {
+                        "file": {
+                            "url": "../images/product-2.jpg"
+                        }
+                    }
+                }
             }
         },
         {
-            "sys": {"id": "3"},
+            "sys": {
+                "id": "3"
+            },
             "fields": {
-                "title": "Third Product",
-                "price": "$79",
-                "image": {"fields": {"file": {"url": "./images/product-3.jpg"}}}
+                "title": "Wireless Earbuds with Display Case",
+                "price": "79",
+                "image": {
+                    "fields": {
+                        "file": {
+                            "url": "../images/product-3.jpg"
+                        }
+                    }
+                }
             }
         },
         {
-            "sys": {"id": "4"},
+            "sys": {
+                "id": "4"
+            },
             "fields": {
-                "title": "Fourth Product",
-                "price": "$69",
-                "image": {"fields": {"file": {"url": "./images/product-4.jpg"}}}
+                "title": "Glass Teapot & Tea Gift Set",
+                "price": "69",
+                "image": {
+                    "fields": {
+                        "file": {
+                            "url": "../images/product-4.jpg"
+                        }
+                    }
+                }
             }
         },
         {
-            "sys": {"id": "5"},
+            "sys": {
+                "id": "5"
+            },
             "fields": {
-                "title": "Fifth Product",
-                "price": "$59",
-                "image": {"fields": {"file": {"url": "./images/product-5.jpg"}}}
+                "title": "Stainless Steel Cookware Set",
+                "price": "59",
+                "image": {
+                    "fields": {
+                        "file": {
+                            "url": "../images/product-5.jpg"
+                        }
+                    }
+                }
             }
         },
         {
-            "sys": {"id": "6"},
+            "sys": {
+                "id": "6"
+            },
             "fields": {
-                "title": "Sixth Product",
-                "price": "$49",
-                "image": {"fields": {"file": {"url": "./images/product-6.jpg"}}}
+                "title": "Double-Wall Glass Coffee Mugs",
+                "price": "49",
+                "image": {
+                    "fields": {
+                        "file": {
+                            "url": "../images/product-6.jpg"
+                        }
+                    }
+                }
             }
         },
         {
-            "sys": {"id": "7"},
+            "sys": {
+                "id": "7"
+            },
             "fields": {
-                "title": "Seventh Product",
-                "price": "$39",
-                "image": {"fields": {"file": {"url": "./images/product-7.jpg"}}}
+                "title": "Waterproof Portable Speaker",
+                "price": "39",
+                "image": {
+                    "fields": {
+                        "file": {
+                            "url": "../images/product-7.jpg"
+                        }
+                    }
+                }
             }
         },
         {
-            "sys": {"id": "8"},
+            "sys": {
+                "id": "8"
+            },
             "fields": {
-                "title": "Eighth Product",
-                "price": "$19",
-                "image": {"fields": {"file": {"url": "./images/product-8.jpg"}}}
+                "title": "High-Power Countertop Blender",
+                "price": "19",
+                "image": {
+                    "fields": {
+                        "file": {
+                            "url": "../images/product-8.jpg"
+                        }
+                    }
+                }
             }
-        }    
+        }
     ]
 }

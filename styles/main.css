@@ -347,6 +347,19 @@ body {
     letter-spacing: 0.02em;
     margin-bottom: 1.25rem;
 }
+
+ 
+/* The "$" is generated content rather than a literal character in the HTML.
+   Previously it sat as its own text node right before <span class="cart-total">,
+   and any reformatting of that line — an editor rewrapping it, a line break
+   inserted between "$" and the tag — would add whitespace the browser renders
+   as a visible gap: "$ 0.00" instead of "$0.00". Generated content is glued
+   directly to the span with no text node in between, so that gap cannot
+   reappear no matter how the markup gets reformatted. */
+.cart-total::before {
+    content: "$";
+}
+ 
  
 /* ---------- Motion preference ---------- */
  
