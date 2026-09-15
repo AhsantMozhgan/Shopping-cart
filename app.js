@@ -1,7 +1,7 @@
-/* Save products to local storage
-   Storage.saveProducts() caches the fetched
-   product list in localStorage, so later steps (adding to cart) can
-   look a product up by id without re-fetching products.json. */
+/* Add to cart button
+   View.getCartButtons() attaches a click listener
+   to every "Add to the Shopping Cart" button. For now the handler
+   just logs the click event(actually adding the item to the cart) */
 
 const productsDOM = document.querySelector('.products-center')
 
@@ -30,6 +30,7 @@ class View {
     displayProducts(products) {
         let result = ''
         products.forEach((item) => {
+            // FIX: attributes quoted — see step 103.
             result += `
             <article class="product">
                 <div class="img-container">
@@ -47,6 +48,17 @@ class View {
         })
         productsDOM.innerHTML = result
     }
+
+    getCartButtons() {
+        const buttons = [...document.querySelectorAll('.bag-btn')]
+        buttons.forEach((item) => {
+            let id = item.dataset.id
+
+            item.addEventListener('click', (event) => {
+                console.log(event)
+            })
+        })
+    }
 }
 
 class Storage {
@@ -62,5 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
     product.getProducts().then((data) => {
         view.displayProducts(data)
         Storage.saveProducts(data)
+    }).then(() => {
+        // Must run AFTER displayProducts() has put the buttons in the
+        // DOM, otherwise querySelectorAll('.bag-btn') finds nothing.
+        view.getCartButtons()
     })
 })
