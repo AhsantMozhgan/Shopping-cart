@@ -1,6 +1,7 @@
-/* Show cart
-   View.showCart() reveals the slide-out cart panel
-   (by toggling classes that are now actually defined in main.css whenever an item is added. */
+/* Getting cart data
+   Storage.getCart() reads back whatever was saved
+   in localStorage, and View.initApp() / View.populate() restore that
+   cart into the UI when the page reloads. */
 
 const productsDOM = document.querySelector('.products-center')
 const cartItems = document.querySelector('.cart-items')
@@ -85,6 +86,7 @@ class View {
         const div = document.createElement('div')
         div.classList.add('cart-item')
 
+        // FIX: same malformed-nesting bug as steps 109/110, fixed the same way.
         div.innerHTML = `
             <img src="${item.image}" alt="${item.title}">
             <div>
@@ -106,6 +108,21 @@ class View {
         cartOverlay.classList.add('transparentBcg')
         cartDOM.classList.add('showCart')
     }
+
+    // Runs once on page load: pulls whatever cart was saved from a
+    // previous visit out of localStorage and re-renders it, so a
+    // refresh doesn't silently wipe the cart.
+    initApp() {
+        cart = Storage.getCart()
+        this.setCartValues(cart)
+        this.populate(cart)
+    }
+
+    populate(cart) {
+        cart.forEach((item) => {
+            return this.addCartItem(item)
+        })
+    }
 }
 
 class Storage {
@@ -121,11 +138,19 @@ class Storage {
     static saveCart(cart) {
         localStorage.setItem('cart', JSON.stringify(cart))
     }
+
+    static getCart() {
+        return localStorage.getItem('cart')
+            ? JSON.parse(localStorage.getItem('cart'))
+            : []
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const view = new View()
     const product = new Product()
+
+    view.initApp()
 
     product
         .getProducts()
