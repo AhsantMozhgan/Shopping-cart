@@ -1,9 +1,11 @@
-/* Save cart data
-   every cart item now also gets an `amount` field,
-   and Storage.saveCart() persists the whole cart array to
-   localStorage after every change. */
+/* Set cart values
+   View.setCartValues() sums up the cart's total
+   price and total item count, and writes them into the navbar badge
+   and (eventually) the cart footer. */
 
 const productsDOM = document.querySelector('.products-center')
+const cartItems = document.querySelector('.cart-items')
+const cartTotal = document.querySelector('.cart-total')
 
 let cart = []
 
@@ -57,8 +59,25 @@ class View {
                 let cartItem = { ...Storage.getProduct(id), amount: 1 }
                 cart = [...cart, cartItem]
                 Storage.saveCart(cart)
+
+                this.setCartValues(cart)
             })
         })
+    }
+
+    setCartValues(cart) {
+        let totalPrice = 0
+        let totalItems = 0
+
+        cart.map((item) => {
+            // Products now come out of products.json as real numbers
+            // (see products.json), so this math is no longer relying
+            // on implicit string coercion the way "$89" * 1 used to.
+            totalPrice = totalPrice + item.price * item.amount
+            totalItems = totalItems + item.amount
+        })
+        cartTotal.innerText = totalPrice
+        cartItems.innerText = totalItems
     }
 }
 
