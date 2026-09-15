@@ -1,7 +1,8 @@
-/* Getting products
-   Goal of this step: prove we can fetch products.json and reshape
-   the (intentionally messy, Contentful-CMS-style) data into
-   something simple: { title, price, id, image }. */
+/* Displaying products
+   View.displayProducts() renders every product
+   fetched by Product.getProducts() as a card in the DOM. */
+
+const productsDOM = document.querySelector('.products-center')
 
 let cart = []
 
@@ -24,7 +25,28 @@ class Product {
     }
 }
 
-class View {}
+class View {
+    displayProducts(products) {
+        let result = ''
+        products.forEach((item) => {
+            result += `
+            <article class="product">
+                <div class="img-container">
+                    <img
+                    src="${item.image}"
+                    alt="${item.title}"
+                    class="product-img"
+                    />
+                    <button class="bag-btn" data-id="${item.id}">Add to the Shopping Cart</button>
+                </div>
+                <h3>${item.title}</h3>
+                <h4>${item.price}</h4>
+            </article>
+            `
+        })
+        productsDOM.innerHTML = result
+    }
+}
 
 class Storage {}
 
@@ -32,6 +54,5 @@ document.addEventListener('DOMContentLoaded', () => {
     const view = new View()
     const product = new Product()
 
-    // For this step we just prove the data comes back correctly shaped.
-    product.getProducts().then((data) => console.log(data))
+    product.getProducts().then((data) => view.displayProducts(data))
 })
