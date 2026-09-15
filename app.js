@@ -1,7 +1,7 @@
-/* Add to cart button
-   View.getCartButtons() attaches a click listener
-   to every "Add to the Shopping Cart" button. For now the handler
-   just logs the click event(actually adding the item to the cart) */
+/* Add products to cart
+   clicking a bag button now actually pushes an
+   item onto `cart`, using Storage.getProduct(id) to look up the full
+   product record. */
 
 const productsDOM = document.querySelector('.products-center')
 
@@ -20,8 +20,8 @@ class Product {
                 return { title, price, id, image }
             })
             return products
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            console.log(err)
         }
     }
 }
@@ -55,7 +55,9 @@ class View {
             let id = item.dataset.id
 
             item.addEventListener('click', (event) => {
-                console.log(event)
+                let cartItem = Storage.getProduct(id)
+                cart = [...cart, cartItem]
+                console.log(cart)
             })
         })
     }
@@ -64,6 +66,11 @@ class View {
 class Storage {
     static saveProducts(products) {
         localStorage.setItem('products', JSON.stringify(products))
+    }
+
+    static getProduct(id) {
+        let products = JSON.parse(localStorage.getItem('products'))
+        return products.find((item) => item.id === id)
     }
 }
 
