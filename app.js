@@ -1,7 +1,6 @@
-/* Getting cart data
-   Storage.getCart() reads back whatever was saved
-   in localStorage, and View.initApp() / View.populate() restore that
-   cart into the UI when the page reloads. */
+/* Close cart button
+   the cart icon in the navbar opens the cart, and
+   the X icon inside the panel closes it (View.hideCart()). */
 
 const productsDOM = document.querySelector('.products-center')
 const cartItems = document.querySelector('.cart-items')
@@ -9,6 +8,8 @@ const cartTotal = document.querySelector('.cart-total')
 const cartContent = document.querySelector('.cart-content')
 const cartDOM = document.querySelector('.cart')
 const cartOverlay = document.querySelector('.cart-overlay')
+const cartBtn = document.querySelector('.cart-btn')
+const closeCartBtn = document.querySelector('.close-cart')
 
 let cart = []
 
@@ -86,7 +87,6 @@ class View {
         const div = document.createElement('div')
         div.classList.add('cart-item')
 
-        // FIX: same malformed-nesting bug as steps 109/110, fixed the same way.
         div.innerHTML = `
             <img src="${item.image}" alt="${item.title}">
             <div>
@@ -109,13 +109,18 @@ class View {
         cartDOM.classList.add('showCart')
     }
 
-    // Runs once on page load: pulls whatever cart was saved from a
-    // previous visit out of localStorage and re-renders it, so a
-    // refresh doesn't silently wipe the cart.
+    hideCart() {
+        cartOverlay.classList.remove('transparentBcg')
+        cartDOM.classList.remove('showCart')
+    }
+
     initApp() {
         cart = Storage.getCart()
         this.setCartValues(cart)
         this.populate(cart)
+
+        cartBtn.addEventListener('click', () => this.showCart())
+        closeCartBtn.addEventListener('click', () => this.hideCart())
     }
 
     populate(cart) {
