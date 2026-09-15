@@ -1,6 +1,7 @@
-/* Displaying products
-   View.displayProducts() renders every product
-   fetched by Product.getProducts() as a card in the DOM. */
+/* Save products to local storage
+   Storage.saveProducts() caches the fetched
+   product list in localStorage, so later steps (adding to cart) can
+   look a product up by id without re-fetching products.json. */
 
 const productsDOM = document.querySelector('.products-center')
 
@@ -48,11 +49,18 @@ class View {
     }
 }
 
-class Storage {}
+class Storage {
+    static saveProducts(products) {
+        localStorage.setItem('products', JSON.stringify(products))
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const view = new View()
     const product = new Product()
 
-    product.getProducts().then((data) => view.displayProducts(data))
+    product.getProducts().then((data) => {
+        view.displayProducts(data)
+        Storage.saveProducts(data)
+    })
 })
